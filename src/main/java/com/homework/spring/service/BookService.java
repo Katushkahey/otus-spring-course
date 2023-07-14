@@ -40,11 +40,11 @@ public class BookService {
             throw new IllegalArgumentException("author is not provided.");
         } else {
             if (author.getName() == null || author.getSurname() == null || author.getFatherName() == null ||
-            author.getDateOfBirth() == null) {
+                    author.getDateOfBirth() == null) {
                 throw new IllegalArgumentException("one or some of parameters (name, surname, fatherName, dateOfBirth)" +
                         "are not provided for author of book.");
             } else if (author.getId() == null) {
-                Long authorId = authorDao.getAuthorIdByNameSurnameFatherNameAndDateOfBirth(author.getName(),author.getSurname(),
+                Long authorId = authorDao.getAuthorIdByNameSurnameFatherNameAndDateOfBirth(author.getName(), author.getSurname(),
                         author.getFatherName(), author.getDateOfBirth());
                 if (authorId == null) {
                     authorId = authorDao.add(author);
@@ -70,11 +70,11 @@ public class BookService {
         }
     }
 
-    public Book getById(long id) {
+    public com.homework.spring.dto.Book getById(long id) {
         return bookDao.getById(id);
     }
 
-    public List<Book> getAll() {
+    public List<com.homework.spring.dto.Book> getAll() {
         return bookDao.getAll();
     }
 }

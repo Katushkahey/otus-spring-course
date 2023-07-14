@@ -19,7 +19,7 @@ class BookDaoJdbcTest {
     @Autowired
     private BookDaoJdbc bookDaoJdbc;
 
-    private final int INIT_BOOK_SIZE = 3;
+    private final int INIT_BOOK_SIZE = 6;
     private final long MEDNYI_VSADNIK_ID = 1L;
     private final String MEDNYI_VSADNIK_TITLE = "Mednyi vsadnik";
     private final int MEDNYI_VSADNIK_NUMBER_OF_PAGES = 14;
@@ -76,59 +76,59 @@ class BookDaoJdbcTest {
 
         long id = bookDaoJdbc.add(book);
         assertThat(id).isEqualTo(INIT_BOOK_SIZE + 1);
-        List<Book> books = bookDaoJdbc.getAll();
+        List<com.homework.spring.dto.Book> books = bookDaoJdbc.getAll();
         assertThat(books.size()).isEqualTo(INIT_BOOK_SIZE + 1);
     }
 
     @Test
     void updateBook() {
-        Book book = bookDaoJdbc.getById(1L);
-        book.setTitle(MEDNYI_VSADNIK_TITLE_UPDATED);
-        book.setNumberOfPages(MEDNYI_VSADNIK_NUMBER_OF_PAGES_UPDATED);
-        book.setYearOfPublishing(MEDNYI_VSADNIK_YEAR_OF_PUBLISHING_UPDATED);
-        bookDaoJdbc.update(book);
-        Book updatedBook = bookDaoJdbc.getById(1L);
-        assertThat(book.getTitle()).isEqualTo(MEDNYI_VSADNIK_TITLE_UPDATED);
-        assertThat(book.getNumberOfPages()).isEqualTo(MEDNYI_VSADNIK_NUMBER_OF_PAGES_UPDATED);
-        assertThat(book.getYearOfPublishing()).isEqualTo(MEDNYI_VSADNIK_YEAR_OF_PUBLISHING_UPDATED);
+        com.homework.spring.dto.Book book = bookDaoJdbc.getById(MEDNYI_VSADNIK_ID);
+        Book bookToUpdate = new Book(MEDNYI_VSADNIK_ID, MEDNYI_VSADNIK_TITLE_UPDATED, MEDNYI_VSADNIK_NUMBER_OF_PAGES_UPDATED,
+                MEDNYI_VSADNIK_YEAR_OF_PUBLISHING_UPDATED, new Author(1L, book.getAuthorName(), book.getAuthorSurname(),
+                book.getAuthorFatherName(), book.getAuthorDateOfBirth()), new Genre(2L, book.getGenre()));
+        bookDaoJdbc.update(bookToUpdate);
+        com.homework.spring.dto.Book updatedBook = bookDaoJdbc.getById(MEDNYI_VSADNIK_ID);
+        assertThat(updatedBook.getTitle()).isEqualTo(MEDNYI_VSADNIK_TITLE_UPDATED);
+        assertThat(updatedBook.getNumberOfPages()).isEqualTo(MEDNYI_VSADNIK_NUMBER_OF_PAGES_UPDATED);
+        assertThat(updatedBook.getYearOfPublishing()).isEqualTo(MEDNYI_VSADNIK_YEAR_OF_PUBLISHING_UPDATED);
     }
 
     @Test
     void getBookById() {
-        Book book = bookDaoJdbc.getById(1L);
+        com.homework.spring.dto.Book book = bookDaoJdbc.getById(1L);
         assertThat(book.getId()).isEqualTo(MEDNYI_VSADNIK_ID);
         assertThat(book.getTitle()).isEqualTo(MEDNYI_VSADNIK_TITLE);
         assertThat(book.getNumberOfPages()).isEqualTo(MEDNYI_VSADNIK_NUMBER_OF_PAGES);
         assertThat(book.getYearOfPublishing()).isEqualTo(MEDNYI_VSADNIK_YEAR_OF_PUBLISHING);
-        assertThat(book.getAuthor().getSurname()).isEqualTo(MEDNYI_VSADNIK_AUTHOR_SURNAME);
-        assertThat(book.getGenre().getName()).isEqualTo(MEDNYI_VSADNIK_GENRE);
+        assertThat(book.getAuthorSurname()).isEqualTo(MEDNYI_VSADNIK_AUTHOR_SURNAME);
+        assertThat(book.getGenre()).isEqualTo(MEDNYI_VSADNIK_GENRE);
 
     }
 
     @Test
     void getAllBooks() {
-        List<Book> books = bookDaoJdbc.getAll();
+        List<com.homework.spring.dto.Book> books = bookDaoJdbc.getAll();
         assertThat(books.size()).isEqualTo(INIT_BOOK_SIZE);
 
         assertThat(books.get(0).getId()).isEqualTo(MEDNYI_VSADNIK_ID);
         assertThat(books.get(0).getTitle()).isEqualTo(MEDNYI_VSADNIK_TITLE);
         assertThat(books.get(0).getNumberOfPages()).isEqualTo(MEDNYI_VSADNIK_NUMBER_OF_PAGES);
         assertThat(books.get(0).getYearOfPublishing()).isEqualTo(MEDNYI_VSADNIK_YEAR_OF_PUBLISHING);
-        assertThat(books.get(0).getAuthor().getSurname()).isEqualTo(MEDNYI_VSADNIK_AUTHOR_SURNAME);
-        assertThat(books.get(0).getGenre().getName()).isEqualTo(MEDNYI_VSADNIK_GENRE);
+        assertThat(books.get(0).getAuthorSurname()).isEqualTo(MEDNYI_VSADNIK_AUTHOR_SURNAME);
+        assertThat(books.get(0).getGenre()).isEqualTo(MEDNYI_VSADNIK_GENRE);
 
         assertThat(books.get(1).getId()).isEqualTo(POSLYSHAITE_ID);
         assertThat(books.get(1).getTitle()).isEqualTo(POSLYSHAITE_TITLE);
         assertThat(books.get(1).getNumberOfPages()).isEqualTo(POSLYSHAITE_NUMBER_OF_PAGES);
         assertThat(books.get(1).getYearOfPublishing()).isEqualTo(POSLYSHAITE_YEAR_OF_PUBLISHING);
-        assertThat(books.get(1).getAuthor().getSurname()).isEqualTo(POSLYSHAITE_AUTHOR_SURNAME);
-        assertThat(books.get(1).getGenre().getName()).isEqualTo(POSLYSHAITE_GENRE);
+        assertThat(books.get(1).getAuthorSurname()).isEqualTo(POSLYSHAITE_AUTHOR_SURNAME);
+        assertThat(books.get(1).getGenre()).isEqualTo(POSLYSHAITE_GENRE);
 
         assertThat(books.get(2).getId()).isEqualTo(ANNA_KARENINA_ID);
         assertThat(books.get(2).getTitle()).isEqualTo(ANNA_KARENINA_TITLE);
         assertThat(books.get(2).getNumberOfPages()).isEqualTo(ANNA_KARENINA_NUMBER_OF_PAGES);
         assertThat(books.get(2).getYearOfPublishing()).isEqualTo(ANNA_KARENINA_YEAR_OF_PUBLISHING);
-        assertThat(books.get(2).getAuthor().getSurname()).isEqualTo(ANNA_KARENINA_AUTHOR_SURNAME);
-        assertThat(books.get(2).getGenre().getName()).isEqualTo(ANNA_KARENINA_GENRE);
+        assertThat(books.get(2).getAuthorSurname()).isEqualTo(ANNA_KARENINA_AUTHOR_SURNAME);
+        assertThat(books.get(2).getGenre()).isEqualTo(ANNA_KARENINA_GENRE);
     }
 }

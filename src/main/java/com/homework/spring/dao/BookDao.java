@@ -10,7 +10,7 @@ public interface BookDao {
 
     void update(Book book);
 
-    Book getById(long id);
+    com.homework.spring.dto.Book getById(long id);
 
-    List<Book> getAll();
+    List<com.homework.spring.dto.Book> getAll();
 }

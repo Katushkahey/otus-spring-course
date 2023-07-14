@@ -1,19 +1,20 @@
-package com.homework.spring.entity;
+package com.homework.spring.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import java.util.List;
 
 @Data
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Author {
+
     Long id;
     String name;
     String surname;
     String fatherName;
     String dateOfBirth;
-
+    List<String> books;
 }

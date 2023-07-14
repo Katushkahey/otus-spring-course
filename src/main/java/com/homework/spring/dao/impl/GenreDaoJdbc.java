@@ -49,20 +49,20 @@ public class GenreDaoJdbc implements GenreDao {
         try {
             return namedParameterJdbcOperations.queryForObject("select id from GENRE where name= :name",
                     Map.of("name", name), Long.class);
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
     private class GenreMapper implements RowMapper<Genre> {
 
-    @Override
-    public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Genre genre = new Genre();
-        genre.setId(rs.getLong("ID"));
-        genre.setName(rs.getString("NAME"));
+        @Override
+        public Genre mapRow(ResultSet rs, int rowNum) throws SQLException {
+            Genre genre = new Genre();
+            genre.setId(rs.getLong("ID"));
+            genre.setName(rs.getString("NAME"));
 
-        return genre;
+            return genre;
+        }
     }
-}
 }

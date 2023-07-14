@@ -8,9 +8,9 @@ public interface AuthorDao {
 
     long add(Author author);
 
-    Author getById(long id);
+    com.homework.spring.dto.Author getById(long id);
 
-    List<Author> getAll();
+    List<com.homework.spring.dto.Author> getAll();
 
     Long getAuthorIdByNameSurnameFatherNameAndDateOfBirth(String name, String surname, String fatherName, String dateOfBirth);
 }

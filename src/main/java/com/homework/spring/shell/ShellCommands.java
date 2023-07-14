@@ -8,7 +8,6 @@ import com.homework.spring.service.BookService;
 import com.homework.spring.service.GenreService;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
 
 import java.util.List;
 
@@ -36,25 +35,13 @@ public class ShellCommands {
         bookService.add(book);
     }
 
-    // updateBook
-//    @ShellMethod(value = "updateBook", key = "addBook")
-//    public void updateBook(Long id, String newTitle, int newNumberOfPages, int newYearOfPublishing, String newAuthorName,
-//                           String newAuthorSurname, String newAuthorFatherName, String newAuthorDateOfBirth,
-//                           String newGenreName) {
-//
-//        Author author = new Author(null, authorName, authorSurname, authorFatherName, authorDateOfBirth);
-//        Genre genre = new Genre(null, genreName);
-//        Book book = new Book(id, title, numberOfPages, yearOfPublishing, author, genre);
-//        bookService.update(book);
-//    }
-
     @ShellMethod(value = "getBookById", key = "getBookById")
-    public Book getBookById(Long id) {
+    public com.homework.spring.dto.Book getBookById(Long id) {
         return bookService.getById(id);
     }
 
     @ShellMethod(value = "getAllBooks", key = "getAllBooks")
-    public List<Book> getAllBooks() {
+    public List<com.homework.spring.dto.Book> getAllBooks() {
         return bookService.getAll();
     }
 
@@ -69,12 +56,12 @@ public class ShellCommands {
     }
 
     @ShellMethod(value = "getAuthorById", key = "getAuthorById")
-    public Author getAuthorById(Long id) {
+    public com.homework.spring.dto.Author getAuthorById(Long id) {
         return authorService.getById(id);
     }
 
     @ShellMethod(value = "getAllAuthors", key = "getAllAuthors")
-    public List<Author> getAllAuthors() {
+    public List<com.homework.spring.dto.Author> getAllAuthors() {
         return authorService.getAll();
     }
 }

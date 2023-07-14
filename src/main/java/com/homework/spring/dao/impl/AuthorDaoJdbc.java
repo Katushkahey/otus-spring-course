@@ -3,7 +3,7 @@ package com.homework.spring.dao.impl;
 import com.homework.spring.dao.AuthorDao;
 import com.homework.spring.entity.Author;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -12,6 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,13 +40,21 @@ public class AuthorDaoJdbc implements AuthorDao {
     }
 
     @Override
-    public Author getById(long id) {
-        return namedParameterJdbcOperations.queryForObject("select * from AUTHOR where id= :id", Map.of("id", id), new AuthorMapper());
+    public com.homework.spring.dto.Author getById(long id) {
+        Map<Long, com.homework.spring.dto.Author> map = namedParameterJdbcOperations.query("select a.id, " +
+                        "a.name, a.surname, a.father_name, a.date_of_birth, b.title as book_title from AUTHOR a left join " +
+                        "Book b on a.id = b.author_id where a.id= :id",
+                Map.of("id", id), new AutorResultSetExtractor());
+        return map == null || map.isEmpty() ? null : map.get(id);
     }
 
+
     @Override
-    public List<Author> getAll() {
-        return namedParameterJdbcOperations.query("select * from AUTHOR", new AuthorMapper());
+    public List<com.homework.spring.dto.Author> getAll() {
+        Map<Long, com.homework.spring.dto.Author> map = namedParameterJdbcOperations.query("select a.id, a.name, " +
+                "a.surname, a.father_name, a.date_of_birth, b.title as book_title from AUTHOR a left join Book b " +
+                "on a.id = b.author_id", new AutorResultSetExtractor());
+        return map == null || map.isEmpty() ? new ArrayList<>() : new ArrayList<>(map.values());
     }
 
     @Override
@@ -55,23 +65,28 @@ public class AuthorDaoJdbc implements AuthorDao {
                             "surname = :surname and father_name = :fatherName and date_of_birth = :dateOfBirth",
                     Map.of("name", name, "surname", surname, "fatherName", fatherName, "dateOfBirth", dateOfBirth),
                     Long.class);
-        } catch(EmptyResultDataAccessException e) {
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
 
-    private class AuthorMapper implements RowMapper<Author> {
+    private class AutorResultSetExtractor implements ResultSetExtractor<Map<Long, com.homework.spring.dto.Author>> {
 
         @Override
-        public Author mapRow(ResultSet rs, int rowNum) throws SQLException {
-            Author author = new Author();
-            author.setId(rs.getLong("ID"));
-            author.setName(rs.getString("NAME"));
-            author.setSurname(rs.getString("SURNAME"));
-            author.setFatherName(rs.getString("FATHER_NAME"));
-            author.setDateOfBirth(rs.getString("DATE_OF_BIRTH"));
-
-            return author;
+        public Map<Long, com.homework.spring.dto.Author> extractData(ResultSet rs) throws SQLException {
+            Map<Long, com.homework.spring.dto.Author> authors = new HashMap<>();
+            while (rs.next()) {
+                Long id = rs.getLong("ID");
+                com.homework.spring.dto.Author author = authors.get(id);
+                if (author == null) {
+                    author = new com.homework.spring.dto.Author(id, rs.getString("NAME"),
+                            rs.getString("SURNAME"), rs.getString("FATHER_NAME"),
+                            rs.getString("DATE_OF_BIRTH"), new ArrayList<>());
+                    authors.put(id, author);
+                }
+                author.getBooks().add(rs.getString("BOOK_TITLE"));
+            }
+            return authors;
         }
     }
 }

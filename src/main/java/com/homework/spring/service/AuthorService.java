@@ -19,11 +19,11 @@ public class AuthorService {
         return authorDao.add(author);
     }
 
-    public Author getById(long id) {
+    public com.homework.spring.dto.Author getById(long id) {
         return authorDao.getById(id);
     }
 
-    public List<Author> getAll() {
+    public List<com.homework.spring.dto.Author> getAll() {
         return authorDao.getAll();
     }
 }

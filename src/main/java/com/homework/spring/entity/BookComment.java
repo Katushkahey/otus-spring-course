@@ -6,25 +6,24 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
+@Entity
 @ToString
+@Table(name = "book_comment")
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "genre")
-public class Genre {
+public class BookComment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name")
-    private String name;
-    @OneToMany(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY, mappedBy = "genre")
+    @Column(name = "title")
+    private String title;
+    @Column(name = "text_")
+    private String text;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "book")
     @ToString.Exclude
-    private List<Book> books;
+    private Book book;
 
-    public Genre(String name) {
-        this.name = name;
-    }
 }

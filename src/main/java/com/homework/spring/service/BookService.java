@@ -1,80 +1,63 @@
 package com.homework.spring.service;
 
-import com.homework.spring.dao.AuthorDao;
-import com.homework.spring.dao.BookDao;
-import com.homework.spring.dao.GenreDao;
-import com.homework.spring.entity.Author;
 import com.homework.spring.entity.Book;
-import com.homework.spring.entity.Genre;
+import com.homework.spring.mapper.BookMapper;
+import com.homework.spring.repository.BookRepository;
+import com.homework.spring.util.Util;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static com.homework.spring.util.Util.isStringEmpty;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class BookService {
 
-    private final BookDao bookDao;
-    private final AuthorDao authorDao;
-    private final GenreDao genreDao;
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
 
-    public BookService(BookDao bookDao, AuthorDao authorDao, GenreDao genreDao) {
-        this.bookDao = bookDao;
-        this.authorDao = authorDao;
-        this.genreDao = genreDao;
+    public long save(com.homework.spring.dto.Book book) {
+        validateBook(book);
+        Book bookEntity = bookMapper.toEntity(book);
+
+        return bookRepository.save(bookEntity);
     }
 
-    public long add(Book book) {
-        prepareAuthorForBookCreationOrUpdate(book.getAuthor());
-        prepareGenreForBookCreationOrUpdate(book.getGenre());
-        return bookDao.add(book);
+    public void update(com.homework.spring.dto.Book book) {
+        validateBook(book);
+        Book bookEntity = bookMapper.toEntity(book);
+        bookRepository.save(bookEntity);
     }
 
-    public void update(Book book) {
-        prepareAuthorForBookCreationOrUpdate(book.getAuthor());
-        prepareGenreForBookCreationOrUpdate(book.getGenre());
-        bookDao.update(book);
+    public com.homework.spring.dto.Book findById(long id) {
+        return bookMapper.toDto(bookRepository.findById(id));
     }
 
-    private void prepareAuthorForBookCreationOrUpdate(Author author) {
-        if (author == null) {
+    public List<com.homework.spring.dto.Book> findAll() {
+        return bookRepository.findAll().stream().map(bookMapper::toDto).collect(Collectors.toList());
+    }
+
+    private void validateBook(com.homework.spring.dto.Book book) {
+        if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
+            if (book.getAuthors().stream().anyMatch(a -> Util.isStringEmpty(a) || a.split(" ").length < 3)) {
+                throw new IllegalArgumentException("one of mandatory parameters (name, surname, fatherName, dateOfBirth) " +
+                        "are missing for author");
+            }
+        } else {
             throw new IllegalArgumentException("author is not provided.");
-        } else {
-            if (author.getName() == null || author.getSurname() == null || author.getFatherName() == null ||
-                    author.getDateOfBirth() == null) {
-                throw new IllegalArgumentException("one or some of parameters (name, surname, fatherName, dateOfBirth)" +
-                        "are not provided for author of book.");
-            } else if (author.getId() == null) {
-                Long authorId = authorDao.getAuthorIdByNameSurnameFatherNameAndDateOfBirth(author.getName(), author.getSurname(),
-                        author.getFatherName(), author.getDateOfBirth());
-                if (authorId == null) {
-                    authorId = authorDao.add(author);
-                }
-                author.setId(authorId);
-            }
+        }
+        if (book.getGenre() == null || isStringEmpty(book.getGenre())) {
+            throw new IllegalArgumentException("genre is not provided for this book.");
         }
     }
 
-    private void prepareGenreForBookCreationOrUpdate(Genre genre) {
-        if (genre == null) {
-            throw new IllegalArgumentException("genre is not provided.");
-        } else {
-            if (genre.getName() == null) {
-                throw new IllegalArgumentException("genre is not set for this book.");
-            } else if (genre.getId() == null) {
-                Long genreId = genreDao.getGenreIdByName(genre.getName());
-                if (genreId == null) {
-                    genreId = genreDao.add(genre);
-                }
-                genre.setId(genreId);
-            }
-        }
-    }
-
-    public com.homework.spring.dto.Book getById(long id) {
-        return bookDao.getById(id);
-    }
-
-    public List<com.homework.spring.dto.Book> getAll() {
-        return bookDao.getAll();
+    public void deleteById(Long id) {
+        Book book = bookRepository.findById(id);
+        bookRepository.delete(book);
     }
 }

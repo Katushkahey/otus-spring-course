@@ -1,17 +1,24 @@
 package com.homework.spring.dto;
 
+import com.homework.spring.entity.BookComment;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Book {
 
     Long id;
     String title;
     int numberOfPages;
     int yearOfPublishing;
-    String authorName;
-    String authorSurname;
-    String authorFatherName;
-    String authorDateOfBirth;
+    List<String> authors;
     String genre;
+
 }
+
+

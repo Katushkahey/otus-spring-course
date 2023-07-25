@@ -1,26 +1,40 @@
 package com.homework.spring.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
+
+import javax.persistence.*;
+import java.util.List;
 
 @Data
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@EqualsAndHashCode
+@Table(name = "book")
+@NamedEntityGraph(name = "book_genre_graph", attributeNodes = {@NamedAttributeNode("genre")})
 public class Book {
-    Long id;
-    String title;
-    int numberOfPages;
-    int yearOfPublishing;
-    Author author;
-    Genre genre;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "number_of_pages")
+    private int numberOfPages;
+    @Column(name = "year_of_publishing")
+    private int yearOfPublishing;
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @JoinTable(name = "book_author",
+        joinColumns = @JoinColumn(name = "book_id"),
+        inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "genre_id")
+    private Genre genre;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "book")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private List<BookComment> bookComment;
 
-    public Book(Long id, String newTitle, int newNumberOfPages, int newYearOfPublishing) {
-        this.id = id;
-        this.title = newTitle;
-        this.numberOfPages = newNumberOfPages;
-        this.yearOfPublishing = newYearOfPublishing;
-    }
 }

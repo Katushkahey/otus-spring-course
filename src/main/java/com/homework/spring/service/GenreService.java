@@ -10,23 +10,26 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class GenreService {
 
     private final GenreRepository genreRepository;
 
+    @Transactional
     public long add(Genre genre) {
         return genreRepository.save(genre);
     }
 
+    @Transactional(readOnly = true)
     public Genre findById(long id) {
         return genreRepository.findById(id);
     }
 
+    @Transactional(readOnly = true)
     public List<Genre> findAll() {
         return genreRepository.findAll();
     }
 
+    @Transactional
     public void deleteById(Long id) {
         Genre genre = genreRepository.findById(id);
         genreRepository.delete(genre);

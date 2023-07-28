@@ -15,12 +15,12 @@ import static com.homework.spring.util.Util.isStringEmpty;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class BookService {
 
     private final BookRepository bookRepository;
     private final BookMapper bookMapper;
 
+    @Transactional
     public long save(com.homework.spring.dto.Book book) {
         validateBook(book);
         Book bookEntity = bookMapper.toEntity(book);
@@ -28,16 +28,19 @@ public class BookService {
         return bookRepository.save(bookEntity);
     }
 
+    @Transactional
     public void update(com.homework.spring.dto.Book book) {
         validateBook(book);
         Book bookEntity = bookMapper.toEntity(book);
         bookRepository.save(bookEntity);
     }
 
+    @Transactional(readOnly = true)
     public com.homework.spring.dto.Book findById(long id) {
         return bookMapper.toDto(bookRepository.findById(id));
     }
 
+    @Transactional(readOnly = true)
     public List<com.homework.spring.dto.Book> findAll() {
         return bookRepository.findAll().stream().map(bookMapper::toDto).collect(Collectors.toList());
     }
@@ -56,6 +59,7 @@ public class BookService {
         }
     }
 
+    @Transactional
     public void deleteById(Long id) {
         Book book = bookRepository.findById(id);
         bookRepository.delete(book);

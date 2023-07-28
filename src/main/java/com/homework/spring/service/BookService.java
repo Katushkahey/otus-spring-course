@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.homework.spring.util.Util.isStringEmpty;
@@ -25,7 +26,7 @@ public class BookService {
         validateBook(book);
         Book bookEntity = bookMapper.toEntity(book);
 
-        return bookRepository.save(bookEntity);
+        return bookRepository.save(bookEntity).getId();
     }
 
     @Transactional
@@ -37,7 +38,11 @@ public class BookService {
 
     @Transactional(readOnly = true)
     public com.homework.spring.dto.Book findById(long id) {
-        return bookMapper.toDto(bookRepository.findById(id));
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            return bookMapper.toDto(book.get());
+        }
+        throw new IllegalArgumentException(String.format("Book with id %d was not found", id));
     }
 
     @Transactional(readOnly = true)
@@ -61,7 +66,7 @@ public class BookService {
 
     @Transactional
     public void deleteById(Long id) {
-        Book book = bookRepository.findById(id);
-        bookRepository.delete(book);
+        Optional<Book> book = bookRepository.findById(id);
+        book.ifPresent(bookRepository::delete);
     }
 }

@@ -2,22 +2,21 @@ package com.homework.spring.repository.impl;
 
 import com.homework.spring.entity.Book;
 import com.homework.spring.entity.BookComment;
+import com.homework.spring.repository.BookCommentRepository;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("JPA Repository for work with BookComments ")
+@DisplayName("Spring Data Repository for work with BookComments ")
 @DataJpaTest
-@Import(BookCommentRepositoryJpa.class)
-public class BookCommentRepositoryJpaTest {
+public class BookCommentRepositoryTest {
 
     private static final int INITIAL_NUMBER_OF_COMMENTS = 2;
     private static final int EXPECTED_NUMBER_OF_REQUESTS_TO_DB = 1;
@@ -26,7 +25,7 @@ public class BookCommentRepositoryJpaTest {
     private static final int NUMBER_OF_COMMENTS_TO_YCHEBNIK_PO_ALGEBRE = 2;
     private static final Long NEGATIVE_COMMENT_TO_YCHEBNIK_PO_ALGEBRE_ID = 1L;
     @Autowired
-    private BookCommentRepositoryJpa bookCommentRepositoryJpa;
+    private BookCommentRepository bookCommentRepositoryJpa;
     @Autowired
     private TestEntityManager em;
 

@@ -1,14 +1,18 @@
 package com.homework.spring.repository;
 
 import com.homework.spring.entity.Genre;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface GenreRepository {
+@Repository
+public interface GenreRepository extends CrudRepository<Genre, Long> {
 
-    Long save(Genre genre);
+    Genre save(Genre genre);
 
-    Genre findById(Long id);
+    Optional<Genre> findById(Long id);
 
     List<Genre> findAll();
 

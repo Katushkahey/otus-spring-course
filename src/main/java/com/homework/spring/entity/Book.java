@@ -1,6 +1,8 @@
 package com.homework.spring.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,7 +14,6 @@ import java.util.List;
 @Entity
 @EqualsAndHashCode
 @Table(name = "book")
-@NamedEntityGraph(name = "book_genre_graph", attributeNodes = {@NamedAttributeNode("genre")})
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +24,11 @@ public class Book {
     private int numberOfPages;
     @Column(name = "year_of_publishing")
     private int yearOfPublishing;
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @Fetch(FetchMode.SUBSELECT)
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     @JoinTable(name = "book_author",
-        joinColumns = @JoinColumn(name = "book_id"),
-        inverseJoinColumns = @JoinColumn(name = "author_id")
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     private List<Author> authors;
     @ManyToOne(cascade = CascadeType.PERSIST)

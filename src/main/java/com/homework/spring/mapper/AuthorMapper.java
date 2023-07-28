@@ -2,7 +2,6 @@ package com.homework.spring.mapper;
 
 import com.homework.spring.dto.Author;
 import com.homework.spring.entity.Book;
-import com.homework.spring.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -15,8 +14,6 @@ import java.util.stream.Collectors;
 public class AuthorMapper {
 
     private ModelMapper modelMapper = getModelMapper();
-
-    private final BookRepository bookRepository;
 
     public Author toDto(com.homework.spring.entity.Author author) {
         Author authorDto = new Author();

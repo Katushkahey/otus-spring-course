@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,12 +17,12 @@ public class GenreService {
 
     @Transactional
     public long add(Genre genre) {
-        return genreRepository.save(genre);
+        return genreRepository.save(genre).getId();
     }
 
     @Transactional(readOnly = true)
     public Genre findById(long id) {
-        return genreRepository.findById(id);
+        return genreRepository.findById(id).orElseThrow();
     }
 
     @Transactional(readOnly = true)
@@ -31,7 +32,7 @@ public class GenreService {
 
     @Transactional
     public void deleteById(Long id) {
-        Genre genre = genreRepository.findById(id);
-        genreRepository.delete(genre);
+        Optional<Genre> genre = genreRepository.findById(id);
+        genre.ifPresent(genreRepository::delete);
     }
 }

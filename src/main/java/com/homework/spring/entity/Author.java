@@ -28,12 +28,12 @@ public class Author {
     private String fatherName;
     @Column(name = "date_of_birth")
     private String dateOfBirth;
+    @Fetch(FetchMode.SUBSELECT)
     @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinTable(name = "book_author",
             joinColumns = @JoinColumn(name = "author_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
-    @Fetch(FetchMode.SUBSELECT)
     private List<Book> books;
 
 }

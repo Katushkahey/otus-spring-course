@@ -1,18 +1,22 @@
 package com.homework.spring.repository;
 
 import com.homework.spring.entity.Author;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface AuthorRepository {
+@Repository
+public interface AuthorRepository extends CrudRepository<Author, Long> {
 
-    Long save(Author author);
+    Author save(Author author);
 
-    Author findById(Long id);
+    Optional<Author> findById(Long id);
 
     List<Author> findAll();
 
-    Author findAuthorByNameSurnameFatherName(String name, String surname, String fatherName);
+    Author findAuthorByNameAndSurnameAndFatherName(String name, String surname, String fatherName);
 
     void delete(Author author);
 }

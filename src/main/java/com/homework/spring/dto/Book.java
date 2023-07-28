@@ -1,6 +1,5 @@
 package com.homework.spring.dto;
 
-import com.homework.spring.entity.BookComment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +19,3 @@ public class Book {
     String genre;
 
 }
-
-

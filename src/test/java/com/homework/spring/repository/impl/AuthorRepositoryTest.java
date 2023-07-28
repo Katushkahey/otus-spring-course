@@ -4,33 +4,33 @@ import com.homework.spring.entity.Author;
 import com.homework.spring.entity.Book;
 import com.homework.spring.entity.BookComment;
 import com.homework.spring.entity.Genre;
+import com.homework.spring.repository.AuthorRepository;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.context.annotation.Import;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("JPA Repository for work with Authors ")
+@DisplayName("Spring Data Repository for work with Authors ")
 @DataJpaTest
-@Import(AuthorRepositoryJpa.class)
-public class AuthorRepositoryJpaTest {
+public class AuthorRepositoryTest {
     private static final String PUSHKIN_NAME = "Alexander";
     private static final String PUSHKIN_SURNAME = "Pushkin";
     private static final String PUSHKIN_FATHER_NAME = "Sergeevich";
     private static final String PUSHKIN_DATE_OF_BIRTH = "1799-05-26";
     private static final int NUMBER_OF_PUSHKIN_BOOKS_IN_DB = 2;
     @Autowired
-    private AuthorRepositoryJpa authorRepositoryJpa;
+    private AuthorRepository authorRepository;
     @Autowired
     private TestEntityManager em;
     private static final int INITIAL_NUMBER_OF_AUTHORS = 5;
-    private static final int EXPECTED_NUMBER_OF_REQUESTS_TO_DB = 2;
+    private static final int EXPECTED_NUMBER_OF_REQUESTS_TO_DB = 3;
     private static final Long PUSHKIN_ID = 1L;
     private static final Long YCHEBNIK_ID = 7L;
     private static final Long YCHEBNIK_AUTHOR_ID = 4L;
@@ -43,7 +43,7 @@ public class AuthorRepositoryJpaTest {
         SessionFactory sessionFactory = em.getEntityManager().getEntityManagerFactory().unwrap(SessionFactory.class);
         sessionFactory.getStatistics().setStatisticsEnabled(true);
 
-        List<Author> authors = authorRepositoryJpa.findAll();
+        List<Author> authors = authorRepository.findAll();
         assertThat(authors.size()).isEqualTo(INITIAL_NUMBER_OF_AUTHORS);
 
         assertThat(sessionFactory.getStatistics().getPrepareStatementCount()).isEqualTo(EXPECTED_NUMBER_OF_REQUESTS_TO_DB);
@@ -53,15 +53,17 @@ public class AuthorRepositoryJpaTest {
     @Test
     public void addAuthor() {
         Author author = new Author(null, "Kate", "Ivanova", "Igorevna", "23-02-1996", null);
-        authorRepositoryJpa.save(author);
-        List<Author> authors = authorRepositoryJpa.findAll();
+        authorRepository.save(author);
+        List<Author> authors = authorRepository.findAll();
         assertThat(authors.size()).isEqualTo(INITIAL_NUMBER_OF_AUTHORS + 1);
     }
 
     @DisplayName("must find Author in database by id")
     @Test
     public void findAuthorById() {
-        Author author = authorRepositoryJpa.findById(PUSHKIN_ID);
+        Optional<Author> authorOptional = authorRepository.findById(PUSHKIN_ID);
+        assert(authorOptional.isPresent());
+        Author author = authorOptional.get();
         assertThat(author.getId()).isEqualTo(PUSHKIN_ID);
         assertThat(author.getName()).isEqualTo(PUSHKIN_NAME);
         assertThat(author.getSurname()).isEqualTo(PUSHKIN_SURNAME);
@@ -75,7 +77,7 @@ public class AuthorRepositoryJpaTest {
     @Test
     public void deleteGenreById() {
         Author ychebnikAuthor = em.find(Author.class, YCHEBNIK_AUTHOR_ID);
-        authorRepositoryJpa.delete(ychebnikAuthor);
+        authorRepository.delete(ychebnikAuthor);
 
         Author authorAfterDelete = em.find(Author.class, YCHEBNIK_ID);
         assertThat(authorAfterDelete).isNull();

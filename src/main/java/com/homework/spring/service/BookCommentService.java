@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,7 +17,7 @@ public class BookCommentService {
 
     @Transactional
     public Long save(BookComment bookComment) {
-        return bookCommentRepository.save(bookComment);
+        return bookCommentRepository.save(bookComment).getId();
     }
 
     @Transactional(readOnly = true)
@@ -31,7 +32,7 @@ public class BookCommentService {
 
     @Transactional
     public void deleteById(Long id) {
-        BookComment comment = bookCommentRepository.findById(id);
-        bookCommentRepository.delete(comment);
+        Optional<BookComment> comment = bookCommentRepository.findById(id);
+        comment.ifPresent(bookCommentRepository::delete);
     }
 }

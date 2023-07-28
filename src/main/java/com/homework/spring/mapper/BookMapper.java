@@ -40,7 +40,7 @@ public class BookMapper {
         bookEntity.setAuthors(book.getAuthors().stream().map(author -> {
 
             String[] authorData = author.split(" ");
-            Author author1 = authorRepository.findAuthorByNameSurnameFatherName(authorData[0],
+            Author author1 = authorRepository.findAuthorByNameAndSurnameAndFatherName(authorData[0],
                     authorData[2], authorData[1]);
             return author1 == null ? new Author(null, authorData[0],
                     authorData[2], authorData[1], authorData.length >= 4 ? authorData[3] : null, null) : author1;

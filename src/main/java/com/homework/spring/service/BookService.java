@@ -1,0 +1,72 @@
+package com.homework.spring.service;
+
+import com.homework.spring.entity.Book;
+import com.homework.spring.mapper.BookMapper;
+import com.homework.spring.repository.BookRepository;
+import com.homework.spring.util.Util;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static com.homework.spring.util.Util.isStringEmpty;
+
+@Service
+@RequiredArgsConstructor
+public class BookService {
+
+    private final BookRepository bookRepository;
+    private final BookMapper bookMapper;
+
+    @Transactional
+    public String save(com.homework.spring.dto.Book book) {
+        validateBook(book);
+        Book bookEntity = bookMapper.toEntity(book);
+
+        return bookRepository.save(bookEntity).getId();
+    }
+
+    @Transactional
+    public void update(com.homework.spring.dto.Book book) {
+        validateBook(book);
+        Book bookEntity = bookMapper.toEntity(book);
+        bookRepository.save(bookEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public com.homework.spring.dto.Book findById(String id) {
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            return bookMapper.toDto(book.get());
+        }
+        throw new IllegalArgumentException(String.format("Book with id %d was not found", id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<com.homework.spring.dto.Book> findAll() {
+        return bookRepository.findAll().stream().map(bookMapper::toDto).collect(Collectors.toList());
+    }
+
+    private void validateBook(com.homework.spring.dto.Book book) {
+        if (book.getAuthors() != null && !book.getAuthors().isEmpty()) {
+            if (book.getAuthors().stream().anyMatch(a -> Util.isStringEmpty(a) || a.split(" ").length < 3)) {
+                throw new IllegalArgumentException("one of mandatory parameters (name, surname, fatherName, dateOfBirth) " +
+                        "are missing for author");
+            }
+        } else {
+            throw new IllegalArgumentException("author is not provided.");
+        }
+        if (book.getGenre() == null || isStringEmpty(book.getGenre())) {
+            throw new IllegalArgumentException("genre is not provided for this book.");
+        }
+    }
+
+    @Transactional
+    public void deleteById(String id) {
+        Optional<Book> book = bookRepository.findById(id);
+        book.ifPresent(bookRepository::delete);
+    }
+}

@@ -1,0 +1,14 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: awesomeMongo
+
+mongock:
+  runner-type: "InitializingBean"
+  change-log-scan-package: "com.homework.spring.changelogs"
+
+logging:
+  level:
+    root: INFO

@@ -39,7 +39,7 @@ public class ShellCommands {
     }
 
     @ShellMethod(value = "getBookById", key = "getBookById")
-    public com.homework.spring.dto.Book getBookById(Long id) {
+    public com.homework.spring.dto.Book getBookById(String id) {
         return bookService.findById(id);
     }
 
@@ -49,12 +49,12 @@ public class ShellCommands {
     }
 
     @ShellMethod(value = "deleteBookById", key = "deleteBookById")
-    public void deleteBookById(Long id) {
+    public void deleteBookById(String id) {
         bookService.deleteById(id);
     }
 
     @ShellMethod(value = "getGenreById", key = "getGenreById")
-    public Genre getGenreById(Long id) {
+    public Genre getGenreById(String id) {
         return genreService.findById(id);
     }
 
@@ -64,12 +64,12 @@ public class ShellCommands {
     }
 
     @ShellMethod(value = "deleteGenreById", key = "deleteGenreById")
-    public void deleteGenreById(Long id) {
+    public void deleteGenreById(String id) {
         genreService.deleteById(id);
     }
 
     @ShellMethod(value = "getAuthorById", key = "getAuthorById")
-    public com.homework.spring.dto.Author getAuthorById(Long id) {
+    public com.homework.spring.dto.Author getAuthorById(String id) {
         return authorService.findById(id);
     }
 
@@ -79,17 +79,17 @@ public class ShellCommands {
     }
 
     @ShellMethod(value = "deleteAuthorById", key = "deleteAuthorById")
-    public void deleteAuthorById(Long id) {
+    public void deleteAuthorById(String id) {
         authorService.deleteById(id);
     }
 
     @ShellMethod(value = "getBookCommentsByBookId", key = "getBookCommentsByBookId")
-    public List<BookComment> getBookCommentsByBookId(Long bookId) {
+    public List<BookComment> getBookCommentsByBookId(String bookId) {
         return bookCommentService.findByBookId(bookId);
     }
 
     @ShellMethod(value = "deleteBookCommentById", key = "deleteBookCommentById")
-    public void deleteBookCommentById(Long id) {
+    public void deleteBookCommentById(String id) {
         bookCommentService.deleteById(id);
     }
 }

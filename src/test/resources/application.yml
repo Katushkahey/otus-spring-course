@@ -1,11 +1,22 @@
 spring:
-  sql:
-    init:
-      data-locations: data.sql
-      mode: always
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
+  data:
+    mongodb:
+      port: 0
+      database: test
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
 
-    show-sql: true
+mongock:
+  runner-type: "InitializingBean"
+  change-logs-scan-package: com.homework.spring.changelogs
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+
+logging:
+  level:
+    root: ERROR

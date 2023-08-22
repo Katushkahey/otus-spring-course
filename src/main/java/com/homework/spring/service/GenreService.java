@@ -16,12 +16,12 @@ public class GenreService {
     private final GenreRepository genreRepository;
 
     @Transactional
-    public long add(Genre genre) {
+    public String add(Genre genre) {
         return genreRepository.save(genre).getId();
     }
 
     @Transactional(readOnly = true)
-    public Genre findById(long id) {
+    public Genre findById(String id) {
         return genreRepository.findById(id).orElseThrow();
     }
 
@@ -31,7 +31,7 @@ public class GenreService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Optional<Genre> genre = genreRepository.findById(id);
         genre.ifPresent(genreRepository::delete);
     }

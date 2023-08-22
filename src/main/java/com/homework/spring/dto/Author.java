@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Author {
 
-    Long id;
+    String id;
     String name;
     String surname;
     String fatherName;

@@ -4,22 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "author")
+@Document
 public class Author {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     @Column(name = "name")
     private String name;
     @Column(name = "surname")
@@ -28,12 +24,12 @@ public class Author {
     private String fatherName;
     @Column(name = "date_of_birth")
     private String dateOfBirth;
-    @Fetch(FetchMode.SUBSELECT)
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    @JoinTable(name = "book_author",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
-    private List<Book> books;
+
+    public Author(String name, String surname, String fatherName, String dateOfBirth) {
+        this.name = name;
+        this.surname = surname;
+        this.fatherName = fatherName;
+        this.dateOfBirth = dateOfBirth;
+    }
 
 }

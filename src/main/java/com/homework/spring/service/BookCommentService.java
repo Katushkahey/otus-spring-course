@@ -16,12 +16,12 @@ public class BookCommentService {
     private final BookCommentRepository bookCommentRepository;
 
     @Transactional
-    public Long save(BookComment bookComment) {
+    public String save(BookComment bookComment) {
         return bookCommentRepository.save(bookComment).getId();
     }
 
     @Transactional(readOnly = true)
-    public List<BookComment> findByBookId(Long bookId) {
+    public List<BookComment> findByBookId(String bookId) {
         return bookCommentRepository.findByBookId(bookId);
     }
 
@@ -31,7 +31,7 @@ public class BookCommentService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Optional<BookComment> comment = bookCommentRepository.findById(id);
         comment.ifPresent(bookCommentRepository::delete);
     }

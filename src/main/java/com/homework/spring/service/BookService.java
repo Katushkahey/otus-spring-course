@@ -22,7 +22,7 @@ public class BookService {
     private final BookMapper bookMapper;
 
     @Transactional
-    public long save(com.homework.spring.dto.Book book) {
+    public String save(com.homework.spring.dto.Book book) {
         validateBook(book);
         Book bookEntity = bookMapper.toEntity(book);
 
@@ -37,7 +37,7 @@ public class BookService {
     }
 
     @Transactional(readOnly = true)
-    public com.homework.spring.dto.Book findById(long id) {
+    public com.homework.spring.dto.Book findById(String id) {
         Optional<Book> book = bookRepository.findById(id);
         if (book.isPresent()) {
             return bookMapper.toDto(book.get());
@@ -65,7 +65,7 @@ public class BookService {
     }
 
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         Optional<Book> book = bookRepository.findById(id);
         book.ifPresent(bookRepository::delete);
     }

@@ -1,20 +1,13 @@
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-  jpa:
-    generate-ddl: false
-    hibernate:
-      ddl-auto: none
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: awesomeMongo
 
-    show-sql: true
-  h2:
-    console:
-      enabled: true
-      path: '/h2'
-  sql:
-    init:
-      mode: always
-
+mongock:
+  runner-type: "InitializingBean"
+  change-log-scan-package: "com.homework.spring.changelogs"
 
 logging:
   level:
